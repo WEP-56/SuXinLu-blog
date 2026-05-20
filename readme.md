@@ -4,8 +4,8 @@
 
 前台负责展示文章、阅读详情、点赞、留言；后台负责登录、草稿保存、文章发布、留言审核。视觉上强调宣纸、印章、水墨、留白，以及浅色荷塘 / 深色竹林的氛围切换。
 
-html静态演示地址：https://wep-56.github.io/SuXinLu-blog/
-
+- html静态演示地址：https://wep-56.github.io/SuXinLu-blog/
+- 实机运行地址：http://suxin.duckdns.org:55001/
 
 ## 技术栈
 
@@ -264,7 +264,7 @@ static/uploads/
 
 它会把 `docs/` 目录自动部署到 GitHub Pages。
 
-### Pages 启用后访问
+### Pages 
 
 
 ```text
