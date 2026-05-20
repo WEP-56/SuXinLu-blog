@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>素心园 - 文章创作</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+        }
+
+        :root {
+            --ink-deep: #1a1814;
+            --ink-mid: #4a4844;
+            --ink-light: #7a7874;
+            --ink-soft: #b0aea8;
+            --paper-bg: #faf8f3;
+            --paper-card: #f5f3ee;
+            --bamboo-green: #4a6741;
+            --seal-red: #8b2020;
+            --painting-opacity: 0.09;
+        }
+
+        .dark-theme {
+            --ink-deep: #f2f0ea;
+            --ink-mid: #cbc8c2;
+            --ink-light: #8d8a84;
+            --ink-soft: #3a3d42;
+            --paper-bg: #16181b;
+            --paper-card: #22252a;
+            --bamboo-green: #6b9461;
+            --seal-red: #a63a3a;
+            --painting-opacity: 0.05;
+        }
+
+        body {
+            background: var(--paper-bg);
+            color: var(--ink-mid);
+            font-family: "Noto Serif SC", "Source Han Serif", "STSong", serif;
+            line-height: 1.8;
+            letter-spacing: 1px;
+            padding-bottom: 60px;
+            position: relative;
+        }
+
+        .pc-painting {
+            position: fixed;
+            top: 8%;
+            width: 280px;
+            height: 80vh;
+            pointer-events: none;
+            z-index: 1;
+            opacity: var(--painting-opacity);
+        }
+
+        .painting-left { left: 20px; }
+        .painting-right { right: 20px; }
+        .lotus-pond { display: block; }
+        .bamboo-forest { display: none; }
+        .dark-theme .lotus-pond { display: none; }
+        .dark-theme .bamboo-forest { display: block; }
+
+        .desk-banner {
+            background: var(--ink-deep);
+            color: var(--paper-bg);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        .master-title {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 4px;
+        }
+
+        .banner-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-exit,
+        .btn-plain-link,
+        .btn-mini-theme {
+            font-family: inherit;
+            color: var(--paper-card);
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 6px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .workspace-container {
+            max-width: 1280px;
+            margin: 30px auto 0;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 400px;
+            gap: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-block-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--ink-deep);
+            margin-bottom: 20px;
+            border-left: 5px solid var(--bamboo-green);
+            padding-left: 12px;
+            line-height: 1.2;
+        }
+
+        .flash-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .flash-item {
+            padding: 12px 16px;
+            background: #fff4f4;
+            border-left: 4px solid var(--seal-red);
+            color: var(--ink-deep);
+        }
+
+        .writing-desk {
+            background: #fff;
+            border: 1px solid var(--ink-soft);
+            padding: 40px;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .dark-theme .writing-desk,
+        .dark-theme .note-item,
+        .dark-theme .btn-tool-shortcut,
+        .dark-theme .stamp-tag {
+            background: #1d2025;
+        }
+
+        .draft-note {
+            margin-bottom: 22px;
+            padding: 12px 14px;
+            background: var(--paper-card);
+            border-left: 4px solid var(--seal-red);
+            color: var(--ink-deep);
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        .desk-label {
+            display: block;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--ink-deep);
+            margin-bottom: 12px;
+        }
+
+        .desk-input-title {
+            width: 100%;
+            font-family: inherit;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--ink-deep);
+            padding: 14px;
+            border: 1px solid var(--ink-soft);
+            background: var(--paper-bg);
+            outline: none;
+        }
+
+        .desk-textarea {
+            width: 100%;
+            font-family: inherit;
+            font-size: 19px;
+            color: var(--ink-mid);
+            line-height: 2;
+            padding: 24px;
+            border: 1px solid var(--ink-soft);
+            background: #fdfcfe;
+            min-height: 550px;
+            outline: none;
+            resize: vertical;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .dark-theme .desk-textarea,
+        .dark-theme .desk-input-title {
+            background: #181b20;
+        }
+
+        .desk-input-title:focus,
+        .desk-textarea:focus {
+            border-color: var(--ink-deep);
+        }
+
+        .multi-media-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        .media-slot {
+            aspect-ratio: 1;
+            border: 2px dashed var(--ink-soft);
+            background: var(--paper-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .media-slot:hover {
+            border-color: var(--bamboo-green);
+        }
+
+        .media-slot-icon {
+            font-size: 24px;
+            color: var(--ink-light);
+            margin-bottom: 4px;
+        }
+
+        .media-slot-text {
+            font-size: 13px;
+            color: var(--ink-light);
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .media-slot.has-img {
+            border-style: solid;
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+        }
+
+        .badge-cover {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: var(--seal-red);
+            color: #fff;
+            font-size: 11px;
+            padding: 1px 6px;
+            border-radius: 2px;
+        }
+
+        .remove-cover-wrap {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--ink-light);
+            font-size: 14px;
+        }
+
+        .toolbox-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .toolbox-card {
+            background: var(--paper-card);
+            border: 1px solid var(--ink-soft);
+            padding: 24px;
+            border-radius: 4px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: var(--ink-deep);
+        }
+
+        .stamp-tag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stamp-tag {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--ink-mid);
+            border: 1px solid var(--ink-soft);
+            padding: 6px 12px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .stamp-tag.selected {
+            background: #fff3f3;
+            border: 2px solid var(--seal-red);
+            color: var(--seal-red);
+        }
+
+        .template-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--ink-light);
+            margin: 16px 0 10px;
+            letter-spacing: 1px;
+        }
+
+        .template-btn-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-tool-shortcut {
+            font-family: inherit;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 12px 14px;
+            border: 1px solid var(--ink-soft);
+            color: var(--ink-mid);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 2px;
+        }
+
+        .btn-tool-shortcut:hover {
+            border-color: var(--seal-red);
+            color: var(--seal-red);
+        }
+
+        .btn-tool-shortcut span:last-child {
+            font-size: 12px;
+            color: var(--ink-light);
+            background: var(--paper-bg);
+            padding: 2px 6px;
+            border-radius: 2px;
+        }
+
+        .note-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .note-item {
+            border: 1px solid var(--ink-soft);
+            padding: 14px 14px 12px;
+            background: #fff;
+        }
+
+        .note-item.current {
+            border-color: var(--seal-red);
+            box-shadow: inset 0 0 0 1px var(--seal-red);
+        }
+
+        .note-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .note-title {
+            color: var(--ink-deep);
+            font-weight: 700;
+            line-height: 1.6;
+        }
+
+        .note-id,
+        .note-meta {
+            color: var(--ink-light);
+            font-size: 12px;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .mini-link,
+        .mini-btn {
+            font-family: inherit;
+            font-size: 12px;
+            text-decoration: none;
+            padding: 6px 10px;
+            border: 1px solid var(--ink-soft);
+            background: var(--paper-bg);
+            color: var(--ink-mid);
+            cursor: pointer;
+        }
+
+        .mini-link.primary {
+            color: var(--seal-red);
+            border-color: var(--seal-red);
+            background: transparent;
+        }
+
+        .bottom-publish-bar {
+            margin-top: 40px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-save-draft {
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 12px 32px;
+            background: var(--paper-card);
+            border: 1px solid var(--ink-soft);
+            color: var(--ink-mid);
+            cursor: pointer;
+        }
+
+        .btn-seal-publish {
+            font-family: inherit;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 12px 48px;
+            background: transparent;
+            border: 3px double var(--seal-red);
+            color: var(--seal-red);
+            cursor: pointer;
+            letter-spacing: 4px;
+        }
+
+        .btn-seal-publish:hover {
+            background: var(--seal-red);
+            color: var(--paper-bg);
+        }
+
+        @media (max-width: 1340px) {
+            .pc-painting { display: none !important; }
+        }
+
+        @media (max-width: 1040px) {
+            .workspace-container { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 640px) {
+            .desk-banner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .writing-desk { padding: 26px 20px; }
+            .multi-media-grid { grid-template-columns: repeat(2, 1fr); }
+            .bottom-publish-bar { justify-content: stretch; }
+            .bottom-publish-bar button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+{% include "_paintings.html" %}
+
+<header class="desk-banner">
+    <div class="master-title">素心园 · 掌园写字台</div>
+    <div class="banner-actions">
+        <button class="btn-mini-theme" id="themeBtn" onclick="toggleTheme()">切换：夜读</button>
+        <a class="btn-plain-link" href="{{ url_for('admin_dashboard') }}">返回后台</a>
+        <a class="btn-exit" href="{{ url_for('index') }}" target="_blank" rel="noreferrer">查看前台</a>
+    </div>
+</header>
+
+<div class="workspace-container">
+    <main class="writing-desk">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flash-list">
+            {% for message in messages %}
+            <li class="flash-item">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+        <h2 class="section-block-title" style="border-left-color: var(--seal-red);">铺展图文手卷</h2>
+
+        {% if draft %}
+        <div class="draft-note">当前正在编辑草稿 #{{ draft.id }}</div>
+        {% endif %}
+
+        <form method="post" action="{{ url_for('editor_submit') }}" enctype="multipart/form-data">
+            <input type="hidden" name="post_id" value="{{ draft.id if draft else '' }}">
+            <input type="hidden" name="tag" id="tagInput" value="{{ draft.tag if draft else default_tag }}">
+            <input type="hidden" name="remove_image" id="removeImageInput" value="0">
+            <input type="file" id="coverInput" name="image" accept=".jpg,.jpeg,.png,.gif,.webp" hidden>
+
+            <div class="form-group">
+                <label class="desk-label" for="note_title">笔记题签（标题）</label>
+                <input class="desk-input-title" type="text" id="note_title" name="title" placeholder="写一个能让人愿意点开的标题" value="{{ draft.title if draft else '' }}">
+            </div>
+
+            <div class="form-group">
+                <label class="desk-label">图文连轴（当前已接入封面上传，点击方块换图）</label>
+                <div class="multi-media-grid">
+                    <label class="media-slot {% if draft and draft.image %}has-img{% endif %}" id="coverSlot" {% if draft and draft.image %}style="background-image: linear-gradient(rgba(0,0,0,0.12), rgba(0,0,0,0.12)), url('{{ draft.image }}');"{% endif %} for="coverInput">
+                        <span class="badge-cover">封面</span>
+                        <span class="media-slot-icon">{% if draft and draft.image %}✓{% else %}+{% endif %}</span>
+                        <span class="media-slot-text" id="coverSlotText">{% if draft and draft.image %}点击更换封面{% else %}点击上传封面{% endif %}</span>
+                    </label>
+                    <div class="media-slot">
+                        <span class="media-slot-icon">文</span>
+                        <span class="media-slot-text">其余插图位可后续接入</span>
+                    </div>
+                    <div class="media-slot" style="opacity: 0.55; cursor: default;">
+                        <span class="media-slot-icon">留</span>
+                        <span class="media-slot-text">预留位</span>
+                    </div>
+                    <div class="media-slot" style="opacity: 0.55; cursor: default;">
+                        <span class="media-slot-icon">白</span>
+                        <span class="media-slot-text">预留位</span>
+                    </div>
+                </div>
+
+                {% if draft and draft.image %}
+                <div class="remove-cover-wrap">
+                    <input type="checkbox" id="removeCoverToggle" onchange="toggleRemoveCover(this.checked)">
+                    <label for="removeCoverToggle">保存时移除当前封面</label>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="desk-label" for="note_content">随笔叙述（正文大案）</label>
+                <textarea class="desk-textarea" id="note_content" name="content" placeholder="记录今天的生活片段、做菜步骤，或者突然想到的话">{{ draft.content if draft else '' }}</textarea>
+            </div>
+
+            <div class="bottom-publish-bar">
+                <button type="submit" class="btn-save-draft" name="action" value="draft">暂存草稿</button>
+                <button type="submit" class="btn-seal-publish" name="action" value="publish">盖印发布</button>
+            </div>
+        </form>
+    </main>
+
+    <aside class="toolbox-panel">
+        <div class="toolbox-card">
+            <h3 class="section-title">一键分类（盖章）</h3>
+            <div class="stamp-tag-pool" id="tagPool">
+                {% for tag in ["生活随笔", "私房菜谱", "岁时节气", "摘句抄诗"] %}
+                <div class="stamp-tag {% if (draft and draft.tag == tag) or (not draft and default_tag == tag) %}selected{% endif %}" data-tag="{{ tag }}"># {{ tag }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="toolbox-card">
+            <h3 class="section-title">排版锦囊（点一下直接写入）</h3>
+
+            <div class="template-section-title">图文结构模板</div>
+            <div class="template-btn-list">
+                <button class="btn-tool-shortcut" type="button" onclick="insertFormat('\n🍃《岁时小记》\n【今日天气】：\n【眼下心情】：\n【堂前小事】：\n')">
+                    <span>岁时小记</span>
+                    <span>插入</span>
+                </button>
+                <button class="btn-tool-shortcut" type="button" onclick="insertFormat('\n🍵《好物香事》\n【今日之物】：\n【颜色与气味】：\n【用后感想】：\n')">
+                    <span>好物香事</span>
+                    <span>插入</span>
+                </button>
+                <button class="btn-tool-shortcut" type="button" onclick="insertFormat('\n🥬《菜谱清单》\n【准备】：\n1. \n2. \n【落火成菜】：\n1. \n2. \n')">
+                    <span>菜谱清单</span>
+                    <span>插入</span>
+                </button>
+                <button class="btn-tool-shortcut" type="button" onclick="insertFormat('\n📜《摘句抄录》\n“ 在这里写下一句喜欢的话 ”\n—— 出处\n')">
+                    <span>摘句抄录</span>
+                    <span>插入</span>
+                </button>
+            </div>
+
+            <div class="template-section-title">中式分隔线</div>
+            <div class="template-btn-list">
+                <button class="btn-tool-shortcut" type="button" onclick="insertFormat('\n—— ✦ ——\n')">
+                    <span>简短分隔</span>
+                    <span>置入</span>
+                </button>
+                <button class="btn-tool-shortcut" type="button" onclick="insertFormat('\n—— 竹风过堂 ——\n')">
+                    <span>竹风过堂</span>
+                    <span>置入</span>
+                </button>
+                <button class="btn-tool-shortcut" type="button" onclick="insertFormat('\n☉ ☉ ☉\n')">
+                    <span>篇末收束</span>
+                    <span>置入</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="toolbox-card">
+            <h3 class="section-title">草稿笺册</h3>
+            <div class="note-list">
+                {% if drafts %}
+                {% for item in drafts %}
+                <article class="note-item {% if draft and draft.id == item.id %}current{% endif %}">
+                    <div class="note-head">
+                        <div>
+                            <div class="note-title">{{ item.title }}</div>
+                            <div class="note-meta">{{ item.tag }}</div>
+                        </div>
+                        <div class="note-id">#{{ item.id }}</div>
+                    </div>
+                    <div class="note-meta">更新于 {{ item.updated_at|cn_date }}</div>
+                    <div class="note-actions">
+                        <a class="mini-link primary" href="{{ url_for('creator', post_id=item.id) }}">继续写</a>
+                        <form method="post" action="{{ url_for('delete_draft', post_id=item.id) }}" onsubmit="return confirm('确认删除这个草稿？')">
+                            <button class="mini-btn" type="submit">删除</button>
+                        </form>
+                    </div>
+                </article>
+                {% endfor %}
+                {% else %}
+                <div class="note-item">
+                    <div class="note-title">还没有草稿</div>
+                    <div class="note-meta">先在左边写下第一篇。</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="toolbox-card">
+            <h3 class="section-title">已刊文章</h3>
+            <div class="note-list">
+                {% if published_posts %}
+                {% for item in published_posts %}
+                <article class="note-item">
+                    <div class="note-head">
+                        <div>
+                            <div class="note-title">{{ item.title }}</div>
+                            <div class="note-meta">{{ item.tag }}</div>
+                        </div>
+                        <div class="note-id">#{{ item.id }}</div>
+                    </div>
+                    <div class="note-meta">发布于 {{ item.published_at|cn_date }}</div>
+                    <div class="note-actions">
+                        <a class="mini-link primary" href="{{ url_for('post_detail', post_id=item.id) }}" target="_blank" rel="noreferrer">查看前台</a>
+                        <form method="post" action="{{ url_for('fork_post', post_id=item.id) }}">
+                            <button class="mini-btn" type="submit">重新起草</button>
+                        </form>
+                    </div>
+                </article>
+                {% endfor %}
+                {% else %}
+                <div class="note-item">
+                    <div class="note-title">还没有已刊文章</div>
+                    <div class="note-meta">发布后会出现在这里。</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </aside>
+</div>
+
+<script>
+    (function () {
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-theme");
+        }
+        syncThemeButton();
+    })();
+
+    function toggleTheme() {
+        document.body.classList.toggle("dark-theme");
+        localStorage.setItem("theme", document.body.classList.contains("dark-theme") ? "dark" : "light");
+        syncThemeButton();
+    }
+
+    function syncThemeButton() {
+        document.getElementById("themeBtn").textContent = document.body.classList.contains("dark-theme") ? "切换：白日" : "切换：夜读";
+    }
+
+    function insertFormat(text) {
+        var textarea = document.getElementById("note_content");
+        var start = textarea.selectionStart;
+        var end = textarea.selectionEnd;
+        var currentValue = textarea.value;
+        textarea.value = currentValue.substring(0, start) + text + currentValue.substring(end);
+        textarea.focus();
+        textarea.selectionStart = textarea.selectionEnd = start + text.length;
+    }
+
+    document.getElementById("tagPool").addEventListener("click", function (event) {
+        var target = event.target.closest(".stamp-tag");
+        if (!target) {
+            return;
+        }
+        document.querySelectorAll(".stamp-tag").forEach(function (item) {
+            item.classList.remove("selected");
+        });
+        target.classList.add("selected");
+        document.getElementById("tagInput").value = target.getAttribute("data-tag");
+    });
+
+    document.getElementById("coverInput").addEventListener("change", function (event) {
+        var file = event.target.files[0];
+        if (!file) {
+            return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (loadEvent) {
+            var slot = document.getElementById("coverSlot");
+            slot.classList.add("has-img");
+            slot.style.backgroundImage = "linear-gradient(rgba(0,0,0,0.12), rgba(0,0,0,0.12)), url('" + loadEvent.target.result + "')";
+            slot.querySelector(".media-slot-icon").textContent = "✓";
+            document.getElementById("coverSlotText").textContent = "点击更换封面";
+            document.getElementById("removeImageInput").value = "0";
+            var removeToggle = document.getElementById("removeCoverToggle");
+            if (removeToggle) {
+                removeToggle.checked = false;
+            }
+        };
+        reader.readAsDataURL(file);
+    });
+
+    function toggleRemoveCover(checked) {
+        document.getElementById("removeImageInput").value = checked ? "1" : "0";
+    }
+</script>
+</body>
+</html>

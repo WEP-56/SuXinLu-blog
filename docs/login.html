@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>素心录 - 柴扉归家</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, background 0.5s ease;
+        }
+
+        /* 默认：白日模式变量 */
+        :root {
+            --ink-deep: #1a1814;
+            --ink-濃: #2c2a26;
+            --ink-中: #4a4844;
+            --ink-淡: #7a7874;
+            --ink-清: #b0aea8;
+            --paper-bg: #faf8f3;
+            --paper-card: #f5f3ee;
+            --bamboo-green: #4a6741;
+            --seal-red: #8b2020;
+        }
+
+        /* 秉烛（夜间）模式变量 */
+        .dark-theme {
+            --ink-deep: #f2f0ea;
+            --ink-濃: #dfded9;
+            --ink-中: #b8b6b0;
+            --ink-淡: #888681;
+            --ink-清: #3a3d42;
+            --paper-bg: #16181b;
+            --paper-card: #22252a;
+            --bamboo-green: #6b9461;
+            --seal-red: #a63a3a;
+        }
+
+        body {
+            background-color: var(--paper-bg);
+            font-family: "Noto Serif SC", "Source Han Serif", "STSong", serif;
+            color: var(--ink-濃);
+            line-height: 2.0;
+            letter-spacing: 2px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* 登录信笺卡片 */
+        .login-scroll {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--paper-bg);
+            border: 1px solid var(--ink-清);
+            padding: 50px 40px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            border-radius: 4px;
+        }
+
+        /* 背景微弱的水墨画意象 */
+        .bg-bamboo-shadow {
+            position: absolute;
+            left: 20px;
+            bottom: 10px;
+            font-size: 90px;
+            color: var(--bamboo-green);
+            opacity: 0.04;
+            font-family: serif;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--ink-deep);
+            letter-spacing: 6px;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            font-size: 15px;
+            color: var(--ink-淡);
+            letter-spacing: 2px;
+        }
+
+        /* 适老化的宽敞表单区 */
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ink-中);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        .form-input {
+            width: 100%;
+            font-family: inherit;
+            background-color: var(--paper-card);
+            border: 1px solid var(--ink-清);
+            padding: 14px 18px;
+            font-size: 18px; /* 足够大的录入字号 */
+            color: var(--ink-deep);
+            outline: none;
+            letter-spacing: 2px;
+        }
+
+        .form-input:focus {
+            border-color: var(--ink-deep);
+            background-color: #fff;
+        }
+
+        /* 登录确认区 */
+        .login-actions {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 醒目的推扉大按钮 */
+        .btn-submit-login {
+            width: 100%;
+            font-family: inherit;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 12px 0;
+            background-color: var(--ink-deep);
+            color: var(--paper-bg);
+            border: none;
+            cursor: pointer;
+            letter-spacing: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-submit-login:hover {
+            opacity: 0.9;
+        }
+
+        /* 返回公开页 */
+        .btn-back-home {
+            text-align: center;
+            font-size: 15px;
+            color: var(--ink-淡);
+            text-decoration: none;
+            padding: 8px 0;
+        }
+
+        .btn-back-home:hover {
+            color: var(--bamboo-green);
+        }
+
+        /* 右上角静谧的夜读切换 */
+        .theme-toggle-corner {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .btn-mini-theme {
+            font-family: inherit;
+            font-size: 13px;
+            background: transparent;
+            border: 1px solid var(--ink-清);
+            color: var(--ink-淡);
+            padding: 4px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-scroll">
+        <div class="bg-bamboo-shadow">竹</div>
+
+        <div class="theme-toggle-corner">
+            <button class="btn-mini-theme" id="themeBtn" onclick="toggleTheme()">秉烛</button>
+        </div>
+
+        <header class="login-header">
+            <h1 class="login-title">见字如面</h1>
+            <p class="login-subtitle">掌园归家 · 柴扉轻推</p>
+        </header>
+
+        <form onsubmit="event.preventDefault(); alert('验证成功，欢迎掌园回斋！接下来将跳转到后台管理页面。');">
+            <div class="form-group">
+                <label class="form-label" for="username">掌园雅号</label>
+                <input class="form-input" type="text" id="username" placeholder="请输入您的名号..." required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">入园密匙</label>
+                <input class="form-input" type="password" id="password" placeholder="请输入您的密匙..." required autocomplete="current-password">
+            </div>
+
+            <div class="login-actions">
+                <button type="submit" class="btn-submit-login">推扉而入</button>
+                <a href="Main-screen.html" class="btn-back-home">➔ 返回园子首页</a>
+            </div>
+        </form>
+    </div>
+
+<script>
+    function toggleTheme() {
+        const body = document.body;
+        const btn = document.getElementById('themeBtn');
+        
+        body.classList.toggle('dark-theme');
+        
+        if(body.classList.contains('dark-theme')) {
+            btn.innerHTML = "白日";
+        } else {
+            btn.innerHTML = "秉烛";
+        }
+    }
+</script>
+</body>
+</html>

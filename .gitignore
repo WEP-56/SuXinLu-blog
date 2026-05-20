@@ -1,0 +1,27 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local runtime data
+blog.db
+server.log
+server.err
+
+# Local uploads
+static/uploads/*
+!static/uploads/.gitkeep
+
+# Tooling artifacts
+.playwright-mcp/
+.claude/
+
+# OS / editor files
+.DS_Store
+Thumbs.db

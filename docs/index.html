@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>素心园 - 静态演示</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --ink-deep: #1a1814;
+            --ink-mid: #4a4844;
+            --ink-light: #7a7874;
+            --ink-soft: #b0aea8;
+            --paper-bg: #faf8f3;
+            --paper-card: #f5f3ee;
+            --bamboo-green: #4a6741;
+            --seal-red: #8b2020;
+        }
+
+        body {
+            background: var(--paper-bg);
+            color: var(--ink-mid);
+            font-family: "Noto Serif SC", "Source Han Serif", "STSong", serif;
+            line-height: 1.9;
+            letter-spacing: 1px;
+            padding: 32px 20px 60px;
+        }
+
+        .shell {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(to bottom, #f3f0e8 0%, #faf8f3 100%);
+            padding: 56px 40px 34px;
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 28px;
+        }
+
+        .header-mark {
+            position: absolute;
+            right: 36px;
+            top: -14px;
+            font-size: 180px;
+            color: var(--ink-deep);
+            opacity: 0.05;
+            line-height: 1;
+            user-select: none;
+        }
+
+        .title-row {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 12px;
+        }
+
+        .title {
+            font-size: 42px;
+            letter-spacing: 8px;
+            color: var(--ink-deep);
+        }
+
+        .seal {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 54px;
+            height: 42px;
+            padding: 0 8px;
+            border: 3px double var(--seal-red);
+            color: var(--seal-red);
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 4px;
+        }
+
+        .subtitle {
+            color: var(--ink-light);
+            letter-spacing: 4px;
+        }
+
+        .panel {
+            background: var(--paper-card);
+            border: 1px solid var(--ink-soft);
+            padding: 24px;
+            margin-bottom: 22px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: var(--ink-deep);
+            border-left: 4px solid var(--ink-deep);
+            padding-left: 12px;
+            margin-bottom: 18px;
+            line-height: 1.2;
+        }
+
+        .link-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .link-card {
+            display: block;
+            text-decoration: none;
+            background: #fff;
+            border: 1px solid var(--ink-soft);
+            padding: 18px 18px 16px;
+            color: inherit;
+        }
+
+        .link-card:hover {
+            border-color: var(--seal-red);
+        }
+
+        .link-title {
+            color: var(--ink-deep);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .link-note {
+            color: var(--ink-light);
+            font-size: 14px;
+        }
+
+        @media (max-width: 760px) {
+            .header {
+                padding: 42px 22px 26px;
+            }
+
+            .link-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <header class="header">
+            <div class="header-mark">演</div>
+            <div class="title-row">
+                <h1 class="title">素心园</h1>
+                <span class="seal">样页</span>
+            </div>
+            <p class="subtitle">GitHub Pages 静态演示入口</p>
+        </header>
+
+        <section class="panel">
+            <h2 class="section-title">演示页面</h2>
+            <div class="link-list">
+                <a class="link-card" href="./Main-screen.html">
+                    <div class="link-title">首页预览</div>
+                    <div class="link-note">Main-screen.html</div>
+                </a>
+                <a class="link-card" href="./blog-main.html">
+                    <div class="link-title">文章详情预览</div>
+                    <div class="link-note">blog-main.html</div>
+                </a>
+                <a class="link-card" href="./creator.html">
+                    <div class="link-title">创作页预览</div>
+                    <div class="link-note">creator.html</div>
+                </a>
+                <a class="link-card" href="./login.html">
+                    <div class="link-title">登录页预览</div>
+                    <div class="link-note">login.html</div>
+                </a>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

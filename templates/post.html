@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ post.title }} - 素心园</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+        }
+
+        :root {
+            --ink-deep: #1a1814;
+            --ink-mid: #4a4844;
+            --ink-light: #7a7874;
+            --ink-soft: #b0aea8;
+            --paper-bg: #faf8f3;
+            --paper-card: #f5f3ee;
+            --bamboo-green: #4a6741;
+            --seal-red: #8b2020;
+            --painting-opacity: 0.07;
+        }
+
+        .dark-theme {
+            --ink-deep: #f2f0ea;
+            --ink-mid: #d3d1ca;
+            --ink-light: #8d8a84;
+            --ink-soft: #3a3d42;
+            --paper-bg: #16181b;
+            --paper-card: #22252a;
+            --bamboo-green: #6b9461;
+            --seal-red: #a63a3a;
+            --painting-opacity: 0.04;
+        }
+
+        body {
+            background: var(--paper-bg);
+            color: var(--ink-mid);
+            font-family: "Noto Serif SC", "Source Han Serif", "STSong", serif;
+            line-height: 2.1;
+            letter-spacing: 1px;
+            padding: 36px 20px 60px;
+            position: relative;
+        }
+
+        .pc-painting {
+            position: fixed;
+            top: 8%;
+            width: 220px;
+            height: 80vh;
+            pointer-events: none;
+            z-index: 1;
+            opacity: var(--painting-opacity);
+        }
+
+        .painting-left { left: 30px; }
+        .painting-right { right: 30px; }
+        .lotus-pond { display: block; }
+        .bamboo-forest { display: none; }
+        .dark-theme .lotus-pond { display: none; }
+        .dark-theme .bamboo-forest { display: block; }
+
+        .scroll-container {
+            max-width: 860px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .article-nav {
+            padding-bottom: 22px;
+            margin-bottom: 38px;
+            border-bottom: 1px solid var(--ink-soft);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-back,
+        .nav-link,
+        .btn-mini-theme {
+            font-family: inherit;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .btn-back,
+        .nav-link {
+            color: var(--bamboo-green);
+        }
+
+        .nav-right-group {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .site-mini-title {
+            color: var(--ink-light);
+            letter-spacing: 4px;
+        }
+
+        .btn-mini-theme {
+            border: 1px solid var(--ink-soft);
+            background: transparent;
+            color: var(--ink-light);
+            padding: 5px 12px;
+            cursor: pointer;
+        }
+
+        .article-header {
+            text-align: center;
+            margin-bottom: 38px;
+        }
+
+        .article-title {
+            font-size: 34px;
+            color: var(--ink-deep);
+            line-height: 1.55;
+            letter-spacing: 4px;
+            margin-bottom: 24px;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            color: var(--ink-light);
+            font-size: 15px;
+        }
+
+        .article-tag,
+        .article-id {
+            border: 1px solid var(--bamboo-green);
+            color: var(--bamboo-green);
+            padding: 0 10px;
+            line-height: 1.7;
+        }
+
+        .cover-wrap {
+            margin-bottom: 34px;
+        }
+
+        .cover-image {
+            width: 100%;
+            max-height: 420px;
+            object-fit: cover;
+            border: 1px solid var(--ink-soft);
+        }
+
+        .article-content {
+            font-size: 19px;
+            text-align: justify;
+            margin-bottom: 56px;
+        }
+
+        .article-content p {
+            margin-bottom: 28px;
+            text-indent: 2em;
+        }
+
+        .article-footer-orament {
+            text-align: center;
+            color: var(--ink-soft);
+            font-size: 14px;
+            letter-spacing: 6px;
+            margin: 50px 0;
+        }
+
+        .article-actions {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+
+        .btn-like-big {
+            font-family: inherit;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            padding: 12px 40px;
+            background: var(--paper-card);
+            color: var(--ink-deep);
+            border: 2px solid var(--ink-light);
+            cursor: pointer;
+        }
+
+        .article-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 52px;
+        }
+
+        .article-link-card {
+            padding: 18px 20px;
+            border: 1px solid var(--ink-soft);
+            background: var(--paper-card);
+            text-decoration: none;
+        }
+
+        .article-link-label {
+            display: block;
+            font-size: 13px;
+            color: var(--ink-light);
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+
+        .article-link-title {
+            color: var(--ink-deep);
+            line-height: 1.7;
+        }
+
+        .article-link-card.empty {
+            opacity: 0.55;
+            pointer-events: none;
+        }
+
+        .comment-section {
+            border-top: 2px solid var(--ink-deep);
+            padding-top: 38px;
+        }
+
+        .comment-section-title {
+            font-size: 20px;
+            color: var(--ink-deep);
+            border-left: 5px solid var(--bamboo-green);
+            padding-left: 14px;
+            line-height: 1.2;
+            margin-bottom: 30px;
+        }
+
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            margin-bottom: 46px;
+        }
+
+        .comment-card {
+            background: var(--paper-card);
+            padding: 22px 26px;
+            border-bottom: 2px solid #e6e2d8;
+        }
+
+        .dark-theme .comment-card {
+            border-bottom-color: #3a3d42;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .comment-author {
+            font-weight: 700;
+            color: var(--ink-deep);
+        }
+
+        .comment-date {
+            color: var(--ink-light);
+            font-size: 14px;
+        }
+
+        .comment-form-container {
+            background: #fcfbfa;
+            border: 1px dashed var(--ink-soft);
+            padding: 30px;
+        }
+
+        .dark-theme .comment-form-container {
+            background: #1e2025;
+        }
+
+        .form-title {
+            color: var(--ink-deep);
+            font-size: 17px;
+            margin-bottom: 18px;
+            letter-spacing: 2px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--ink-light);
+            font-weight: 600;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--ink-soft);
+            background: var(--paper-bg);
+            color: var(--ink-deep);
+            font-family: inherit;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .custom-textarea {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.9;
+        }
+
+        .submit-zone {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-seal-submit {
+            font-family: inherit;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            padding: 10px 28px;
+            border: 3px double var(--seal-red);
+            color: var(--seal-red);
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .empty-hint {
+            color: var(--ink-light);
+            text-align: center;
+            padding: 16px 0;
+        }
+
+        @media (max-width: 1200px) {
+            .pc-painting { display: none !important; }
+        }
+
+        @media (max-width: 720px) {
+            .article-nav,
+            .nav-right-group,
+            .comment-header,
+            .article-links {
+                display: block;
+            }
+
+            .nav-right-group > * + * {
+                margin-top: 10px;
+            }
+
+            .article-link-card + .article-link-card {
+                margin-top: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+{% include "_paintings.html" %}
+
+<div class="scroll-container">
+    <div class="article-nav">
+        <a href="{{ url_for('index') }}" class="btn-back">返回首页</a>
+        <div class="nav-right-group">
+            <a href="{{ url_for('about') }}" class="nav-link">关于</a>
+            <button class="btn-mini-theme" id="themeBtn" onclick="toggleTheme()">切换：夜读</button>
+            <span class="site-mini-title">素心园</span>
+        </div>
+    </div>
+
+    <main>
+        <article class="article-header">
+            <h1 class="article-title">{{ post.title }}</h1>
+            <div class="article-meta">
+                <span class="article-tag">{{ post.tag }}</span>
+                <span class="article-id">编号 #{{ post.id }}</span>
+                <time>{{ (post.published_at or post.created_at)|cn_date }}</time>
+                <span>浏览 {{ post.views }}</span>
+            </div>
+        </article>
+
+        {% if post.image %}
+        <div class="cover-wrap">
+            <img class="cover-image" src="{{ post.image }}" alt="{{ post.title }}">
+        </div>
+        {% endif %}
+
+        <section class="article-content">
+            {{ post.content|format_content|safe }}
+        </section>
+
+        <div class="article-footer-orament">卷终</div>
+
+        <div class="article-actions">
+            <button class="btn-like-big" id="likeBtn" onclick="doLike({{ post.id }})">喜欢此文 ({{ post.likes }})</button>
+        </div>
+
+        <div class="article-links">
+            {% if prev_post %}
+            <a class="article-link-card" href="{{ url_for('post_detail', post_id=prev_post.id) }}">
+                <span class="article-link-label">上一篇</span>
+                <span class="article-link-title">#{{ prev_post.id }} {{ prev_post.title }}</span>
+            </a>
+            {% else %}
+            <div class="article-link-card empty">
+                <span class="article-link-label">上一篇</span>
+                <span class="article-link-title">已经是最早一篇</span>
+            </div>
+            {% endif %}
+
+            {% if next_post %}
+            <a class="article-link-card" href="{{ url_for('post_detail', post_id=next_post.id) }}">
+                <span class="article-link-label">下一篇</span>
+                <span class="article-link-title">#{{ next_post.id }} {{ next_post.title }}</span>
+            </a>
+            {% else %}
+            <div class="article-link-card empty">
+                <span class="article-link-label">下一篇</span>
+                <span class="article-link-title">已经是最新一篇</span>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <section class="comment-section">
+        <h3 class="comment-section-title">随堂留墨 · 共 {{ comments|length }} 条</h3>
+
+        <div class="comment-list">
+            {% if comments %}
+            {% for comment in comments %}
+            <div class="comment-card">
+                <div class="comment-header">
+                    <span class="comment-author">{{ comment.author_name }}</span>
+                    <span class="comment-date">{{ comment.created_at|cn_date }}</span>
+                </div>
+                <p>{{ comment.content }}</p>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty-hint">还没有公开留言，静候来信。</div>
+            {% endif %}
+        </div>
+
+        <div class="comment-form-container">
+            <h4 class="form-title">留下几句</h4>
+            <form id="commentForm" onsubmit="return submitComment({{ post.id }})">
+                <div class="input-group">
+                    <label class="input-label" for="author_name">您的称呼</label>
+                    <input class="custom-input" type="text" id="author_name" maxlength="20" placeholder="例如：山中高士" required>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="comment_content">想说的话</label>
+                    <textarea class="custom-input custom-textarea" id="comment_content" maxlength="2000" placeholder="写下您想说的话" required></textarea>
+                </div>
+
+                <div class="submit-zone">
+                    <button class="btn-seal-submit" type="submit">投笺留言</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+
+<script>
+    (function () {
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-theme");
+        }
+        syncThemeButton();
+    })();
+
+    function toggleTheme() {
+        document.body.classList.toggle("dark-theme");
+        localStorage.setItem("theme", document.body.classList.contains("dark-theme") ? "dark" : "light");
+        syncThemeButton();
+    }
+
+    function syncThemeButton() {
+        document.getElementById("themeBtn").textContent = document.body.classList.contains("dark-theme") ? "切换：白日" : "切换：夜读";
+    }
+
+    function doLike(postId) {
+        fetch("/post/" + postId + "/like", { method: "POST" })
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+                if (!data.ok) {
+                    alert(data.msg);
+                    return;
+                }
+                document.getElementById("likeBtn").textContent = "喜欢此文 (" + data.likes + ")";
+            });
+    }
+
+    function submitComment(postId) {
+        var author = document.getElementById("author_name").value.trim();
+        var content = document.getElementById("comment_content").value.trim();
+        if (!author || !content) {
+            alert("昵称和留言都要填写。");
+            return false;
+        }
+
+        var formData = new FormData();
+        formData.append("author", author);
+        formData.append("content", content);
+
+        fetch("/post/" + postId + "/comment", { method: "POST", body: formData })
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+                alert(data.msg);
+                if (data.ok) {
+                    document.getElementById("commentForm").reset();
+                }
+            });
+        return false;
+    }
+</script>
+</body>
+</html>

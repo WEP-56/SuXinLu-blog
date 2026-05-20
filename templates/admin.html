@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>素心园 - 后台总览</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+        }
+
+        :root {
+            --ink-deep: #1a1814;
+            --ink-mid: #4a4844;
+            --ink-light: #7a7874;
+            --ink-soft: #b0aea8;
+            --paper-bg: #faf8f3;
+            --paper-card: #f5f3ee;
+            --bamboo-green: #4a6741;
+            --seal-red: #8b2020;
+            --painting-opacity: 0.09;
+        }
+
+        .dark-theme {
+            --ink-deep: #f2f0ea;
+            --ink-mid: #cbc8c2;
+            --ink-light: #8d8a84;
+            --ink-soft: #3a3d42;
+            --paper-bg: #16181b;
+            --paper-card: #22252a;
+            --bamboo-green: #6b9461;
+            --seal-red: #a63a3a;
+            --painting-opacity: 0.05;
+        }
+
+        body {
+            background: var(--paper-bg);
+            color: var(--ink-mid);
+            font-family: "Noto Serif SC", "Source Han Serif", "STSong", serif;
+            line-height: 1.9;
+            letter-spacing: 1px;
+            padding-bottom: 50px;
+            position: relative;
+        }
+
+        .pc-painting {
+            position: fixed;
+            top: 8%;
+            width: 280px;
+            height: 80vh;
+            pointer-events: none;
+            z-index: 1;
+            opacity: var(--painting-opacity);
+        }
+
+        .painting-left { left: 20px; }
+        .painting-right { right: 20px; }
+        .lotus-pond { display: block; }
+        .bamboo-forest { display: none; }
+        .dark-theme .lotus-pond { display: none; }
+        .dark-theme .bamboo-forest { display: block; }
+
+        .desk-banner {
+            background: var(--ink-deep);
+            color: var(--paper-bg);
+            padding: 18px 34px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .master-title {
+            font-size: 22px;
+            letter-spacing: 4px;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .top-link,
+        .btn-top {
+            font-family: inherit;
+            font-size: 14px;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--paper-bg);
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .top-link.primary {
+            border-color: #ffffff66;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .page-shell {
+            max-width: 1220px;
+            margin: 28px auto 0;
+            padding: 0 18px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .flash-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .flash-item {
+            background: #fff4f4;
+            border-left: 4px solid var(--seal-red);
+            padding: 12px 16px;
+            color: var(--ink-deep);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card,
+        .panel {
+            background: #fff;
+            border: 1px solid var(--ink-soft);
+            border-radius: 4px;
+        }
+
+        .dark-theme .stat-card,
+        .dark-theme .panel,
+        .dark-theme .comment-card {
+            background: #1d2025;
+        }
+
+        .stat-card {
+            padding: 20px 18px;
+        }
+
+        .stat-label {
+            color: var(--ink-light);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            color: var(--ink-deep);
+            font-size: 30px;
+            line-height: 1.2;
+        }
+
+        .top-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .panel {
+            padding: 24px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            color: var(--ink-deep);
+            border-left: 4px solid var(--bamboo-green);
+            padding-left: 12px;
+            line-height: 1.2;
+            margin-bottom: 18px;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .action-btn,
+        .mini-btn,
+        .jump-btn,
+        .password-btn {
+            font-family: inherit;
+            font-size: 14px;
+            padding: 10px 16px;
+            border: 1px solid var(--ink-soft);
+            background: var(--paper-card);
+            color: var(--ink-mid);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .action-btn.primary,
+        .mini-btn.primary {
+            border-color: var(--seal-red);
+            color: var(--seal-red);
+            background: transparent;
+        }
+
+        .jump-form,
+        .password-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .input-inline {
+            flex: 1 1 180px;
+            min-width: 0;
+            padding: 11px 14px;
+            border: 1px solid var(--ink-soft);
+            background: var(--paper-bg);
+            color: var(--ink-deep);
+            font-family: inherit;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .list-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .list-table th,
+        .list-table td {
+            text-align: left;
+            padding: 12px 10px;
+            border-bottom: 1px solid #e7e2d7;
+            vertical-align: top;
+        }
+
+        .dark-theme .list-table th,
+        .dark-theme .list-table td {
+            border-bottom-color: #34373d;
+        }
+
+        .list-table th {
+            color: var(--ink-light);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .list-table td {
+            color: var(--ink-mid);
+            font-size: 14px;
+        }
+
+        .cell-title {
+            color: var(--ink-deep);
+            line-height: 1.7;
+        }
+
+        .cell-sub {
+            color: var(--ink-light);
+            font-size: 12px;
+        }
+
+        .row-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .inline-form { display: inline; }
+
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .comment-card {
+            padding: 16px 18px;
+            background: var(--paper-card);
+            border-left: 3px solid var(--bamboo-green);
+        }
+
+        .comment-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            color: var(--ink-light);
+            font-size: 13px;
+        }
+
+        .comment-post {
+            color: var(--ink-deep);
+            font-weight: 700;
+        }
+
+        .comment-body { margin-bottom: 12px; }
+
+        .empty-hint {
+            color: var(--ink-light);
+            padding: 8px 0;
+        }
+
+        @media (max-width: 1340px) {
+            .pc-painting { display: none !important; }
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .top-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 720px) {
+            .desk-banner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stats-grid { grid-template-columns: 1fr; }
+            .list-table { display: block; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+{% include "_paintings.html" %}
+
+<header class="desk-banner">
+    <div class="master-title">素心园 · 后台总览</div>
+    <div class="top-actions">
+        <button class="btn-top" id="themeBtn" onclick="toggleTheme()">切换：夜读</button>
+        <a class="top-link primary" href="{{ url_for('creator') }}">新建草稿</a>
+        <a class="top-link" href="{{ url_for('index') }}">查看前台</a>
+        <a class="top-link" href="{{ url_for('logout') }}">退出后台</a>
+    </div>
+</header>
+
+<div class="page-shell">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class="flash-list">
+        {% for message in messages %}
+        <li class="flash-item">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    <section class="stats-grid">
+        <article class="stat-card"><div class="stat-label">已发布文章</div><div class="stat-value">{{ stats.published_count }}</div></article>
+        <article class="stat-card"><div class="stat-label">草稿数量</div><div class="stat-value">{{ stats.draft_count }}</div></article>
+        <article class="stat-card"><div class="stat-label">公开留言</div><div class="stat-value">{{ stats.comment_count }}</div></article>
+        <article class="stat-card"><div class="stat-label">待审留言</div><div class="stat-value">{{ stats.pending_count }}</div></article>
+        <article class="stat-card"><div class="stat-label">累计喜欢</div><div class="stat-value">{{ stats.total_likes }}</div></article>
+    </section>
+
+    <section class="top-grid">
+        <div class="panel">
+            <h2 class="panel-title">掌园手边</h2>
+            <div class="quick-actions">
+                <a class="action-btn primary" href="{{ url_for('creator') }}">进入创作页</a>
+                <a class="action-btn" href="{{ url_for('index') }}" target="_blank" rel="noreferrer">打开博客首页</a>
+            </div>
+            <form class="jump-form" method="get" action="{{ url_for('admin_jump') }}">
+                <input class="input-inline" type="number" name="post_id" min="1" placeholder="输入编号，直接跳到草稿或文章">
+                <button class="jump-btn" type="submit">按编号跳转</button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h2 class="panel-title">账号设置</h2>
+            <p style="margin-bottom: 14px; color: var(--ink-light);">当前账号：{{ admin_name }}</p>
+            <form class="password-form" method="post" action="{{ url_for('change_password') }}">
+                <input class="input-inline" type="password" name="new_password" minlength="4" placeholder="输入新密码">
+                <button class="password-btn" type="submit">更新密码</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="top-grid">
+        <div class="panel">
+            <h2 class="panel-title">草稿笺册</h2>
+            {% if drafts %}
+            <table class="list-table">
+                <thead>
+                    <tr><th>编号</th><th>标题</th><th>标签</th><th>更新时间</th><th>操作</th></tr>
+                </thead>
+                <tbody>
+                    {% for draft in drafts %}
+                    <tr>
+                        <td>#{{ draft.id }}</td>
+                        <td><div class="cell-title">{{ draft.title }}</div></td>
+                        <td>{{ draft.tag }}</td>
+                        <td>{{ draft.updated_at|cn_date }}</td>
+                        <td>
+                            <div class="row-actions">
+                                <a class="mini-btn primary" href="{{ url_for('creator', post_id=draft.id) }}">继续编辑</a>
+                                <form class="inline-form" method="post" action="{{ url_for('delete_draft', post_id=draft.id) }}" onsubmit="return confirm('确认删除这个草稿？')">
+                                    <button class="mini-btn" type="submit">删除</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-hint">还没有草稿，先去创作页起一篇。</div>
+            {% endif %}
+        </div>
+
+        <div class="panel">
+            <h2 class="panel-title">待审留言</h2>
+            {% if pending_comments %}
+            <div class="comment-list">
+                {% for comment in pending_comments %}
+                <article class="comment-card" id="comment-{{ comment.id }}">
+                    <div class="comment-meta">
+                        <span>{{ comment.author_name }} · {{ comment.created_at|cn_date }}</span>
+                        <span class="comment-post">#{{ comment.post_id }} {{ comment.post_title }}</span>
+                    </div>
+                    <div class="comment-body">{{ comment.content }}</div>
+                    <div class="row-actions">
+                        <button class="mini-btn primary" type="button" onclick="reviewComment({{ comment.id }}, 'approve')">通过</button>
+                        <button class="mini-btn" type="button" onclick="reviewComment({{ comment.id }}, 'reject')">驳回</button>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-hint">当前没有待审核留言。</div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2 class="panel-title">已发布文章</h2>
+        {% if posts %}
+        <table class="list-table">
+            <thead>
+                <tr><th>编号</th><th>标题</th><th>标签</th><th>发布时间</th><th>数据</th><th>操作</th></tr>
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                <tr>
+                    <td>#{{ post.id }}</td>
+                    <td><div class="cell-title">{{ post.title }}</div></td>
+                    <td>{{ post.tag }}</td>
+                    <td>{{ post.published_at|cn_date }}</td>
+                    <td><div class="cell-sub">浏览 {{ post.views }} · 喜欢 {{ post.likes }}</div></td>
+                    <td>
+                        <div class="row-actions">
+                            <a class="mini-btn primary" href="{{ url_for('post_detail', post_id=post.id) }}" target="_blank" rel="noreferrer">查看前台</a>
+                            <form class="inline-form" method="post" action="{{ url_for('fork_post', post_id=post.id) }}">
+                                <button class="mini-btn" type="submit">重新起草</button>
+                            </form>
+                            <form class="inline-form" method="post" action="{{ url_for('delete_post', post_id=post.id) }}" onsubmit="return confirm('确认删除这篇已发布文章？')">
+                                <button class="mini-btn" type="submit">删除</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-hint">还没有已发布文章。</div>
+        {% endif %}
+    </section>
+</div>
+
+<script>
+    (function () {
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-theme");
+        }
+        syncThemeButton();
+    })();
+
+    function toggleTheme() {
+        document.body.classList.toggle("dark-theme");
+        localStorage.setItem("theme", document.body.classList.contains("dark-theme") ? "dark" : "light");
+        syncThemeButton();
+    }
+
+    function syncThemeButton() {
+        document.getElementById("themeBtn").textContent = document.body.classList.contains("dark-theme") ? "切换：白日" : "切换：夜读";
+    }
+
+    function reviewComment(commentId, action) {
+        fetch("/admin/comment/" + commentId + "/" + action, { method: "POST" })
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+                if (!data.ok) {
+                    alert("操作失败。");
+                    return;
+                }
+                var element = document.getElementById("comment-" + commentId);
+                if (element) {
+                    element.remove();
+                }
+            });
+    }
+</script>
+</body>
+</html>
