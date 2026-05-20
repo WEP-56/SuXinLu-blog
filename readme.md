@@ -4,6 +4,9 @@
 
 前台负责展示文章、阅读详情、点赞、留言；后台负责登录、草稿保存、文章发布、留言审核。视觉上强调宣纸、印章、水墨、留白，以及浅色荷塘 / 深色竹林的氛围切换。
 
+html静态演示地址：https://wep-56.github.io/SuXinLu-blog/
+
+
 ## 技术栈
 
 - 后端：`Flask`
@@ -65,10 +68,7 @@ SuXinLu-blog/
 │  ├─ blog-main.html
 │  ├─ creator.html
 │  └─ login.html
-├─ Main-screen.html             早期首页静态预览稿
-├─ blog-main.html               早期文章页静态预览稿
-├─ creator.html                 早期创作页静态预览稿
-└─ login.html                   早期登录页静态预览稿
+└─ 
 ```
 
 ## 本地开发运行
