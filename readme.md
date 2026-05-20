@@ -205,7 +205,7 @@ SECRET_KEY
 
 ### 3. 关于页链接
 
-当前关于页链接在 [app.py](C:\Users\14844\Downloads\mom's blog\app.py) 的 `about()` 路由里定义：
+当前关于页链接在 [app.py](...\mom's blog\app.py) 的 `about()` 路由里定义：
 
 - 小红书
 - 微信公众号
@@ -216,7 +216,7 @@ SECRET_KEY
 
 ### 4. 诗词内容
 
-首页和关于页的“案头一句”来自 [app.py](C:\Users\14844\Downloads\mom's blog\app.py) 里的 `QUOTES` 列表。
+首页和关于页的“案头一句”来自 [app.py](...\mom's blog\app.py) 里的 `QUOTES` 列表。
 
 想增加随机诗句，直接往这个列表追加。
 
@@ -266,26 +266,12 @@ static/uploads/
 
 ### Pages 启用后访问
 
-如果仓库名保持为 `SuXinLu-blog`，公开仓库地址是：
 
 ```text
 https://wep-56.github.io/SuXinLu-blog/
 ```
 
-如果你后续改了用户名或仓库名，这个地址也会变。
 
-## .gitignore 说明
-
-已经忽略这些本地运行数据：
-
-- `blog.db`
-- `server.log`
-- `server.err`
-- `__pycache__/`
-- `.playwright-mcp/`
-- `static/uploads/*`
-
-如果你希望把某些演示图片提交进仓库，可以改 `.gitignore` 里的上传目录规则。
 
 ## 备注
 

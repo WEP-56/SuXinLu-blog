@@ -22,8 +22,10 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", os.urandom(24).hex())
+app.secret_key = os.environ.get("SECRET_KEY") or "suxinlu-dev-secret-change-me"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
 BASE_DIR = Path(__file__).resolve().parent
 DATABASE = BASE_DIR / "blog.db"
@@ -424,6 +426,7 @@ def login():
     if request.method == "POST":
         username = (request.form.get("username") or "").strip()
         password = (request.form.get("password") or "").strip()
+        remember_login = request.form.get("remember_login") == "1"
         admin = get_db().execute(
             "SELECT * FROM admin WHERE username = ?",
             [username],
@@ -431,7 +434,7 @@ def login():
         if admin and check_password_hash(admin["password_hash"], password):
             session["logged_in"] = True
             session["admin_name"] = admin["username"]
-            session.permanent = True
+            session.permanent = remember_login
             target = (request.args.get("next") or "").strip()
             return redirect(target or url_for("admin_dashboard"))
         error = "账号或密码不对，请再试一次。"
@@ -761,4 +764,4 @@ def change_password():
 
 if __name__ == "__main__":
     init_db()
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=False, host="0.0.0.0", port=5000)
