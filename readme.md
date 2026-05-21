@@ -8,7 +8,7 @@
 - 实机运行地址：http://suxin.duckdns.org:55001/
 
 ## 使用Railway一键部署
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/github/WEP-56/SuXinLu-blog)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/aoXA0J?referralCode=bxT5D0&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## 技术栈
 
