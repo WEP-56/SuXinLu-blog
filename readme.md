@@ -7,6 +7,9 @@
 - html静态演示地址：https://wep-56.github.io/SuXinLu-blog/
 - 实机运行地址：http://suxin.duckdns.org:55001/
 
+## 使用Railway一键部署
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/WEP-56/SuXinLu-blog)
+
 ## 技术栈
 
 - 后端：`Flask`
