@@ -6,6 +6,7 @@
 
 - html静态演示地址：https://wep-56.github.io/SuXinLu-blog/
 - 实机运行地址：https://suxinlu-blog-production.up.railway.app/
+（账号：admin 密码：suchinlu2025 此为演示部署，不要上传任何隐私内容）
 
 ## 使用Railway一键部署
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/aoXA0J?referralCode=bxT5D0&utm_medium=integration&utm_source=template&utm_campaign=generic)
